@@ -1,1 +1,182 @@
-local d=game:GetService("\080\108\097\121\101\114\115")local U=game:GetService("\082\117\110\083\101\114\118\105\099\101")local h=game:GetService("\084\119\101\101\110\083\101\114\118\105\099\101")local K=game:GetService("\085\115\101\114\073\110\112\117\116\083\101\114\118\105\099\101")local q=game:GetService("\083\111\117\110\100\083\101\114\118\105\099\101")local N=d.LocalPlayer local z,o local w=Instance.new("\083\111\117\110\100")w.SoundId="\114\098\120\097\115\115\101\116\105\100\058\047\047\056\051\057\052\054\050\048\056\057\050"w.Volume=11 w.Parent=q local function j()local d=N.Character or N.CharacterAdded:Wait()z=d:WaitForChild("\072\117\109\097\110\111\105\100\082\111\111\116\080\097\114\116",5)o=d:WaitForChild("\072\117\109\097\110\111\105\100",5)end N.CharacterAdded:Connect(j)j()local P=Instance.new("\083\099\114\101\101\110\071\117\105")P.Name="\070\097\107\101\076\097\103\071\085\073"P.ResetOnSpawn=false P.Parent=N:WaitForChild("\080\108\097\121\101\114\071\117\105")local O=Instance.new("\070\114\097\109\101")O.Size=UDim2.new(0,220,0,160)O.Position=UDim2.new(.03,0,.3,0)O.BackgroundColor3=Color3.fromRGB(30,30,30)O.BackgroundTransparency=.1 O.BorderSizePixel=0 O.Active=true O.Draggable=true O.Parent=P local y=Instance.new("\085\073\067\111\114\110\101\114")y.CornerRadius=UDim.new(0,12)y.Parent=O local function W(d)local U=Instance.new("\070\114\097\109\101")U.Size=UDim2.new(0,4,1,0)U.Position=d U.BorderSizePixel=0 U.BackgroundColor3=Color3.fromRGB(255,0,0)U.Parent=O return U end local E=W(UDim2.new(0,0,0,0))local S=W(UDim2.new(1,-4,0,0))local function l(d)while d.Parent do local U=math.random()local K=Color3.fromHSV(U,1,1)local q=h:Create(d,TweenInfo.new(2,Enum.EasingStyle.Sine),{BackgroundColor3=K})q:Play()task.wait(2)end end task.spawn(function()l(E)end)task.spawn(function()l(S)end)local J=Instance.new("\084\101\120\116\076\097\098\101\108")J.Size=UDim2.new(1,0,.2,0)J.Position=UDim2.new(0,0,0,0)J.BackgroundTransparency=1 J.Text="\226\154\153\239\184\143 \070\097\107\101 \076\097\103"J.Font=Enum.Font.GothamBold J.TextSize=20 J.TextColor3=Color3.new(1,1,1)J.Parent=O local H=Instance.new("\084\101\120\116\076\097\098\101\108")H.Size=UDim2.new(1,-20,.2,0)H.Position=UDim2.new(0,10,.2,0)H.BackgroundTransparency=1 H.Text="\076\097\103 \073\110\116\101\114\118\097\108 \040\115\041\058"H.Font=Enum.Font.Gotham H.TextSize=16 H.TextColor3=Color3.new(1,1,1)H.Parent=O local R=Instance.new("\084\101\120\116\066\111\120")R.Size=UDim2.new(1,-20,.2,0)R.Position=UDim2.new(0,10,.4,0)R.BackgroundColor3=Color3.fromRGB(50,50,50)R.Text="\049\046\048"R.ClearTextOnFocus=false R.Font=Enum.Font.Gotham R.TextSize=16 R.TextColor3=Color3.new(1,1,1)R.Parent=O local F=Instance.new("\085\073\067\111\114\110\101\114")F.CornerRadius=UDim.new(0,8)F.Parent=R local L=Instance.new("\084\101\120\116\066\117\116\116\111\110")L.Size=UDim2.new(1,-20,.2,0)L.Position=UDim2.new(0,10,.65,0)L.BackgroundColor3=Color3.fromRGB(20,200,80)L.Text="\079\078"L.Font=Enum.Font.GothamBold L.TextSize=18 L.TextColor3=Color3.new(1,1,1)L.Parent=O local f=Instance.new("\085\073\067\111\114\110\101\114")f.CornerRadius=UDim.new(0,8)f.Parent=L local Y=true local X=1.0 local function c()L.Text=Y and"\079\078"or"\079\070\070"w:Play()local d=Y and Color3.fromRGB(20,200,80)or Color3.fromRGB(200,50,50);(h:Create(L,TweenInfo.new(.2),{BackgroundColor3=d})):Play()end L.MouseButton1Click:Connect(function()Y=not Y c()end)R.FocusLost:Connect(function()local d=tonumber(R.Text)if d and(d>=.3 and d<=5)then X=d else R.Text=tostring(X)end end)c()task.spawn(function()while true do task.wait()local d,h=pcall(function()if not Y or not z or not o then return end if o.MoveDirection.Magnitude<=0 then return end local d={}local h=tick()while tick()-h<X do table.insert(d,z.CFrame)z.Anchored=true U.RenderStepped:Wait()end z.Anchored=false if#d>0 then z.CFrame=d[#d]end end)if not d then warn("\070\097\107\101 \108\097\103 \101\114\114\111\114\058",h)end 
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
+local UIS = game:GetService("UserInputService")
+local SoundService = game:GetService("SoundService")
+
+local player = Players.LocalPlayer
+local hrp, humanoid
+
+local toggleSound = Instance.new("Sound")
+toggleSound.SoundId = "rbxassetid://8394620892"
+toggleSound.Volume = 11
+toggleSound.Parent = SoundService
+
+local function updateHRP()
+        local char = player.Character or player.CharacterAdded:Wait()
+        hrp = char:WaitForChild("HumanoidRootPart", 5)
+        humanoid = char:WaitForChild("Humanoid", 5)
+end
+
+player.CharacterAdded:Connect(updateHRP)
+updateHRP()
+
+local gui = Instance.new("ScreenGui")
+gui.Name = "FakeLagGUI"
+gui.ResetOnSpawn = false
+gui.Parent = player:WaitForChild("PlayerGui")
+
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 220, 0, 160)
+frame.Position = UDim2.new(0.03, 0, 0.3, 0)
+frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+frame.BackgroundTransparency = 0.1
+frame.BorderSizePixel = 0
+frame.Active = true
+frame.Draggable = true
+frame.Parent = gui
+
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 12)
+corner.Parent = frame
+
+local function createBar(pos)
+        local bar = Instance.new("Frame")
+        bar.Size = UDim2.new(0, 4, 1, 0)
+        bar.Position = pos
+        bar.BorderSizePixel = 0
+        bar.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+        bar.Parent = frame
+        return bar
+end
+
+local leftBar = createBar(UDim2.new(0, 0, 0, 0))
+local rightBar = createBar(UDim2.new(1, -4, 0, 0))
+
+local function animateBar(bar)
+        while bar.Parent do
+                local hue = math.random()
+                local color = Color3.fromHSV(hue, 1, 1)
+                local tween = TweenService:Create(bar, TweenInfo.new(2, Enum.EasingStyle.Sine), {
+                        BackgroundColor3 = color
+                })
+                tween:Play()
+                task.wait(2)
+        end
+end
+
+task.spawn(function() animateBar(leftBar) end)
+task.spawn(function() animateBar(rightBar) end)
+
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, 0, 0.2, 0)
+title.Position = UDim2.new(0, 0, 0, 0)
+title.BackgroundTransparency = 1
+title.Text = "⚙️ Fake Lag"
+title.Font = Enum.Font.GothamBold
+title.TextSize = 20
+title.TextColor3 = Color3.new(1, 1, 1)
+title.Parent = frame
+
+local intervalLabel = Instance.new("TextLabel")
+intervalLabel.Size = UDim2.new(1, -20, 0.2, 0)
+intervalLabel.Position = UDim2.new(0, 10, 0.2, 0)
+intervalLabel.BackgroundTransparency = 1
+intervalLabel.Text = "Lag Interval (s):"
+intervalLabel.Font = Enum.Font.Gotham
+intervalLabel.TextSize = 16
+intervalLabel.TextColor3 = Color3.new(1, 1, 1)
+intervalLabel.Parent = frame
+
+local intervalInput = Instance.new("TextBox")
+intervalInput.Size = UDim2.new(1, -20, 0.2, 0)
+intervalInput.Position = UDim2.new(0, 10, 0.4, 0)
+intervalInput.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+intervalInput.Text = "1.0"
+intervalInput.ClearTextOnFocus = false
+intervalInput.Font = Enum.Font.Gotham
+intervalInput.TextSize = 16
+intervalInput.TextColor3 = Color3.new(1, 1, 1)
+intervalInput.Parent = frame
+
+local corner2 = Instance.new("UICorner")
+corner2.CornerRadius = UDim.new(0, 8)
+corner2.Parent = intervalInput
+
+local toggle = Instance.new("TextButton")
+toggle.Size = UDim2.new(1, -20, 0.2, 0)
+toggle.Position = UDim2.new(0, 10, 0.65, 0)
+toggle.BackgroundColor3 = Color3.fromRGB(20, 200, 80)
+toggle.Text = "ON"
+toggle.Font = Enum.Font.GothamBold
+toggle.TextSize = 18
+toggle.TextColor3 = Color3.new(1, 1, 1)
+toggle.Parent = frame
+
+local corner3 = Instance.new("UICorner")
+corner3.CornerRadius = UDim.new(0, 8)
+corner3.Parent = toggle
+
+local fakeLagEnabled = true
+local lagInterval = 1.0
+
+local function updateToggleUI()
+        toggle.Text = fakeLagEnabled and "ON" or "OFF"
+        toggleSound:Play()
+        local color = fakeLagEnabled and Color3.fromRGB(20, 200, 80) or Color3.fromRGB(200, 50, 50)
+        TweenService:Create(toggle, TweenInfo.new(0.2), {BackgroundColor3 = color}):Play()
+end
+
+toggle.MouseButton1Click:Connect(function()
+        fakeLagEnabled = not fakeLagEnabled
+        updateToggleUI()
+end)
+
+intervalInput.FocusLost:Connect(function()
+        local num = tonumber(intervalInput.Text)
+        if num and num >= 0.3 and num <= 5 then
+                lagInterval = num
+        else
+                intervalInput.Text = tostring(lagInterval)
+        end
+end)
+
+updateToggleUI()
+
+-- Engine (Safe)
+task.spawn(function()
+        while true do
+                task.wait()
+                local ok, err = pcall(function()
+                        if not fakeLagEnabled or not hrp or not humanoid then return end
+                        if humanoid.MoveDirection.Magnitude <= 0 then return end
+
+                        local positions = {}
+                        local start = tick()
+                        while tick() - start < lagInterval do
+                                table.insert(positions, hrp.CFrame)
+                                hrp.Anchored = true
+                                RunService.RenderStepped:Wait()
+                        end
+
+                        hrp.Anchored = false
+                        if #positions > 0 then
+                                hrp.CFrame = positions[#positions]
+                        end
+                end)
+                if not ok then warn("Fake lag error:", err) end
+        end
+end)
+
+system)
+local function SendChatMessage(message)
+    if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
+        local textChannel = TextChatService.TextChannels.RBXGeneral
+        textChannel:SendAsync(message)
+    else
+        game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(message, "All")
+    end
+end
+
+-- Send the chat message
+SendChatMessage("Fake Lag made by Youcannotsth")
