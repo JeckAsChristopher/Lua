@@ -3,24 +3,28 @@ local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
 local UIS = game:GetService("UserInputService")
 local SoundService = game:GetService("SoundService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local TextChatService = game:GetService("TextChatService")
 
 local player = Players.LocalPlayer
 local hrp, humanoid
 
+-- Sound Effects
 local toggleSound = Instance.new("Sound")
 toggleSound.SoundId = "rbxassetid://8394620892"
 toggleSound.Volume = 11
 toggleSound.Parent = SoundService
 
 local function updateHRP()
-        local char = player.Character or player.CharacterAdded:Wait()
-        hrp = char:WaitForChild("HumanoidRootPart", 5)
-        humanoid = char:WaitForChild("Humanoid", 5)
+    local char = player.Character or player.CharacterAdded:Wait()
+    hrp = char:WaitForChild("HumanoidRootPart", 5)
+    humanoid = char:WaitForChild("Humanoid", 5)
 end
 
 player.CharacterAdded:Connect(updateHRP)
 updateHRP()
 
+-- GUI
 local gui = Instance.new("ScreenGui")
 gui.Name = "FakeLagGUI"
 gui.ResetOnSpawn = false
@@ -36,41 +40,38 @@ frame.Active = true
 frame.Draggable = true
 frame.Parent = gui
 
-local corner = Instance.new("UICorner")
-corner.CornerRadius = UDim.new(0, 12)
-corner.Parent = frame
+Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 12)
 
+-- UI Bars
 local function createBar(pos)
-        local bar = Instance.new("Frame")
-        bar.Size = UDim2.new(0, 4, 1, 0)
-        bar.Position = pos
-        bar.BorderSizePixel = 0
-        bar.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-        bar.Parent = frame
-        return bar
+    local bar = Instance.new("Frame")
+    bar.Size = UDim2.new(0, 4, 1, 0)
+    bar.Position = pos
+    bar.BorderSizePixel = 0
+    bar.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+    bar.Parent = frame
+    return bar
 end
 
 local leftBar = createBar(UDim2.new(0, 0, 0, 0))
 local rightBar = createBar(UDim2.new(1, -4, 0, 0))
 
 local function animateBar(bar)
-        while bar.Parent do
-                local hue = math.random()
-                local color = Color3.fromHSV(hue, 1, 1)
-                local tween = TweenService:Create(bar, TweenInfo.new(2, Enum.EasingStyle.Sine), {
-                        BackgroundColor3 = color
-                })
-                tween:Play()
-                task.wait(2)
-        end
+    while bar.Parent do
+        local color = Color3.fromHSV(math.random(), 1, 1)
+        TweenService:Create(bar, TweenInfo.new(2, Enum.EasingStyle.Sine), {
+            BackgroundColor3 = color
+        }):Play()
+        task.wait(2)
+    end
 end
 
 task.spawn(function() animateBar(leftBar) end)
 task.spawn(function() animateBar(rightBar) end)
 
+-- Title
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(1, 0, 0.2, 0)
-title.Position = UDim2.new(0, 0, 0, 0)
 title.BackgroundTransparency = 1
 title.Text = "⚙️ Fake Lag"
 title.Font = Enum.Font.GothamBold
@@ -78,6 +79,7 @@ title.TextSize = 20
 title.TextColor3 = Color3.new(1, 1, 1)
 title.Parent = frame
 
+-- Interval Label
 local intervalLabel = Instance.new("TextLabel")
 intervalLabel.Size = UDim2.new(1, -20, 0.2, 0)
 intervalLabel.Position = UDim2.new(0, 10, 0.2, 0)
@@ -88,6 +90,7 @@ intervalLabel.TextSize = 16
 intervalLabel.TextColor3 = Color3.new(1, 1, 1)
 intervalLabel.Parent = frame
 
+-- Input Box
 local intervalInput = Instance.new("TextBox")
 intervalInput.Size = UDim2.new(1, -20, 0.2, 0)
 intervalInput.Position = UDim2.new(0, 10, 0.4, 0)
@@ -98,11 +101,9 @@ intervalInput.Font = Enum.Font.Gotham
 intervalInput.TextSize = 16
 intervalInput.TextColor3 = Color3.new(1, 1, 1)
 intervalInput.Parent = frame
+Instance.new("UICorner", intervalInput).CornerRadius = UDim.new(0, 8)
 
-local corner2 = Instance.new("UICorner")
-corner2.CornerRadius = UDim.new(0, 8)
-corner2.Parent = intervalInput
-
+-- Toggle Button
 local toggle = Instance.new("TextButton")
 toggle.Size = UDim2.new(1, -20, 0.2, 0)
 toggle.Position = UDim2.new(0, 10, 0.65, 0)
@@ -112,71 +113,75 @@ toggle.Font = Enum.Font.GothamBold
 toggle.TextSize = 18
 toggle.TextColor3 = Color3.new(1, 1, 1)
 toggle.Parent = frame
+Instance.new("UICorner", toggle).CornerRadius = UDim.new(0, 8)
 
-local corner3 = Instance.new("UICorner")
-corner3.CornerRadius = UDim.new(0, 8)
-corner3.Parent = toggle
-
+-- State
 local fakeLagEnabled = true
 local lagInterval = 1.0
 
+-- Toggle UI Update
 local function updateToggleUI()
-        toggle.Text = fakeLagEnabled and "ON" or "OFF"
-        toggleSound:Play()
-        local color = fakeLagEnabled and Color3.fromRGB(20, 200, 80) or Color3.fromRGB(200, 50, 50)
-        TweenService:Create(toggle, TweenInfo.new(0.2), {BackgroundColor3 = color}):Play()
+    toggle.Text = fakeLagEnabled and "ON" or "OFF"
+    toggleSound:Play()
+    local color = fakeLagEnabled and Color3.fromRGB(20, 200, 80) or Color3.fromRGB(200, 50, 50)
+    TweenService:Create(toggle, TweenInfo.new(0.2), {BackgroundColor3 = color}):Play()
 end
 
 toggle.MouseButton1Click:Connect(function()
-        fakeLagEnabled = not fakeLagEnabled
-        updateToggleUI()
+    fakeLagEnabled = not fakeLagEnabled
+    updateToggleUI()
 end)
 
 intervalInput.FocusLost:Connect(function()
-        local num = tonumber(intervalInput.Text)
-        if num and num >= 0.3 and num <= 5 then
-                lagInterval = num
-        else
-                intervalInput.Text = tostring(lagInterval)
-        end
+    local num = tonumber(intervalInput.Text)
+    if num and num >= 0.3 and num <= 5 then
+        lagInterval = num
+    else
+        intervalInput.Text = tostring(lagInterval)
+    end
 end)
 
 updateToggleUI()
 
--- Engine (Safe)
+-- Fake Lag Engine
 task.spawn(function()
-        while true do
-                task.wait()
-                local ok, err = pcall(function()
-                        if not fakeLagEnabled or not hrp or not humanoid then return end
-                        if humanoid.MoveDirection.Magnitude <= 0 then return end
+    while true do
+        task.wait()
+        local success, err = pcall(function()
+            if not fakeLagEnabled or not hrp or not humanoid then return end
+            if humanoid.MoveDirection.Magnitude <= 0 then return end
 
-                        local positions = {}
-                        local start = tick()
-                        while tick() - start < lagInterval do
-                                table.insert(positions, hrp.CFrame)
-                                hrp.Anchored = true
-                                RunService.RenderStepped:Wait()
-                        end
+            local positions = {}
+            local start = tick()
+            while tick() - start < lagInterval do
+                table.insert(positions, hrp.CFrame)
+                hrp.Anchored = true
+                RunService.RenderStepped:Wait()
+            end
 
-                        hrp.Anchored = false
-                        if #positions > 0 then
-                                hrp.CFrame = positions[#positions]
-                        end
-                end)
-                if not ok then warn("Fake lag error:", err) end
-        end
+            hrp.Anchored = false
+            if #positions > 0 then
+                hrp.CFrame = positions[#positions]
+            end
+        end)
+        if not success then warn("Fake lag error:", err) end
+    end
 end)
 
-system)
+-- Chat Message System
 local function SendChatMessage(message)
     if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
-        local textChannel = TextChatService.TextChannels.RBXGeneral
-        textChannel:SendAsync(message)
+        local channel = TextChatService:FindFirstChild("TextChannels") and TextChatService.TextChannels:FindFirstChild("RBXGeneral")
+        if channel then
+            channel:SendAsync(message)
+        end
     else
-        game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(message, "All")
+        local say = ReplicatedStorage:FindFirstChild("DefaultChatSystemChatEvents")
+        if say then
+            say:FindFirstChild("SayMessageRequest"):FireServer(message, "All")
+        end
     end
 end
 
--- Send the chat message
-SendChatMessage("Fake Lag made by Youcannotsth")
+-- Credit Message
+SendChatMessage("Fake Lag made by Youcannotsth[GUI FIXED]")
