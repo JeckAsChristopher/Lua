@@ -1,0 +1,129 @@
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
+local UIS = game:GetService("UserInputService")
+local player = Players.LocalPlayer
+
+local function waitForHRP()
+	local char = player.Character or player.CharacterAdded:Wait()
+	return char:WaitForChild("HumanoidRootPart"), char:WaitForChild("Humanoid")
+end
+
+local hrp, humanoid = waitForHRP()
+
+-- GUI Setup
+local gui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
+gui.Name = "FakeLagGUI"
+gui.ResetOnSpawn = false
+
+local frame = Instance.new("Frame", gui)
+frame.Size = UDim2.new(0, 220, 0, 160)
+frame.Position = UDim2.new(0.03, 0, 0.3, 0)
+frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+frame.BackgroundTransparency = 0.1
+frame.BorderSizePixel = 0
+frame.ClipsDescendants = true
+
+Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 12)
+
+local title = Instance.new("TextLabel", frame)
+title.Size = UDim2.new(1, 0, 0.2, 0)
+title.Position = UDim2.new(0, 0, 0, 0)
+title.BackgroundTransparency = 1
+title.Text = "⚙️ Fake Lag"
+title.Font = Enum.Font.GothamBold
+title.TextSize = 20
+title.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+local intervalLabel = Instance.new("TextLabel", frame)
+intervalLabel.Size = UDim2.new(1, -20, 0.2, 0)
+intervalLabel.Position = UDim2.new(0, 10, 0.2, 0)
+intervalLabel.BackgroundTransparency = 1
+intervalLabel.Text = "Lag Interval (s):"
+intervalLabel.Font = Enum.Font.Gotham
+intervalLabel.TextSize = 16
+intervalLabel.TextColor3 = Color3.new(1, 1, 1)
+
+local intervalInput = Instance.new("TextBox", frame)
+intervalInput.Size = UDim2.new(1, -20, 0.2, 0)
+intervalInput.Position = UDim2.new(0, 10, 0.4, 0)
+intervalInput.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+intervalInput.Text = "1.0"
+intervalInput.ClearTextOnFocus = false
+intervalInput.Font = Enum.Font.Gotham
+intervalInput.TextSize = 16
+intervalInput.TextColor3 = Color3.new(1, 1, 1)
+
+Instance.new("UICorner", intervalInput).CornerRadius = UDim.new(0, 8)
+
+local toggle = Instance.new("TextButton", frame)
+toggle.Size = UDim2.new(1, -20, 0.2, 0)
+toggle.Position = UDim2.new(0, 10, 0.65, 0)
+toggle.BackgroundColor3 = Color3.fromRGB(20, 200, 80)
+toggle.Text = "ON"
+toggle.Font = Enum.Font.GothamBold
+toggle.TextSize = 18
+toggle.TextColor3 = Color3.new(1, 1, 1)
+
+Instance.new("UICorner", toggle).CornerRadius = UDim.new(0, 8)
+
+-- Variables
+local lagInterval = 1.0
+local fakeLagEnabled = true
+
+local function updateToggleUI()
+	toggle.Text = fakeLagEnabled and "ON" or "OFF"
+	local color = fakeLagEnabled and Color3.fromRGB(20, 200, 80) or Color3.fromRGB(200, 50, 50)
+	TweenService:Create(toggle, TweenInfo.new(0.2), {BackgroundColor3 = color}):Play()
+end
+
+-- Toggle logic
+toggle.MouseButton1Click:Connect(function()
+	fakeLagEnabled = not fakeLagEnabled
+	updateToggleUI()
+end)
+
+-- Interval input logic
+intervalInput.FocusLost:Connect(function()
+	local num = tonumber(intervalInput.Text)
+	if num and num >= 0.3 and num <= 5 then
+		lagInterval = num
+	else
+		intervalInput.Text = tostring(lagInterval)
+	end
+end)
+
+updateToggleUI()
+
+-- Fake Lag Engine
+task.spawn(function()
+	while true do
+		RunService.RenderStepped:Wait()
+
+		if not fakeLagEnabled then continue end
+
+		hrp, humanoid = waitForHRP()
+
+		if humanoid.MoveDirection.Magnitude == 0 then continue end
+
+		-- Start "lag"
+		local storedPositions = {}
+		local elapsed = 0
+		local duration = lagInterval
+
+		local startTime = tick()
+
+		-- Record motion during "lag"
+		while tick() - startTime < duration do
+			table.insert(storedPositions, hrp.CFrame)
+			hrp.Anchored = true
+			RunService.RenderStepped:Wait()
+		end
+
+		-- Teleport to last stored position
+		hrp.Anchored = false
+		if #storedPositions > 0 then
+			hrp.CFrame = storedPositions[#storedPositions]
+		end
+	end
+end)
