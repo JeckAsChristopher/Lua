@@ -31,43 +31,47 @@ gui.ResetOnSpawn = false
 gui.Parent = player:WaitForChild("PlayerGui")
 
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 220, 0, 160)
+frame.Size = UDim2.new(0, 240, 0, 180)
 frame.Position = UDim2.new(0.03, 0, 0.3, 0)
-frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-frame.BackgroundTransparency = 0.1
+frame.BackgroundColor3 = Color3.fromRGB(28, 28, 30)
+frame.BackgroundTransparency = 0.05
 frame.BorderSizePixel = 0
 frame.Active = true
 frame.Draggable = true
 frame.Parent = gui
 
-Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 12)
+Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 14)
 
--- UI Bars
-local function createBar(pos)
-    local bar = Instance.new("Frame")
-    bar.Size = UDim2.new(0, 4, 1, 0)
-    bar.Position = pos
-    bar.BorderSizePixel = 0
-    bar.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-    bar.Parent = frame
-    return bar
+-- Border Frames (4 Sides)
+local function createBorder(pos, size)
+	local border = Instance.new("Frame")
+	border.Position = pos
+	border.Size = size
+	border.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+	border.BorderSizePixel = 0
+	border.ZIndex = 10
+	border.Parent = frame
+	return border
 end
 
-local leftBar = createBar(UDim2.new(0, 0, 0, 0))
-local rightBar = createBar(UDim2.new(1, -4, 0, 0))
+local leftBar   = createBorder(UDim2.new(0, 0, 0, 0), UDim2.new(0, 4, 1, 0))
+local rightBar  = createBorder(UDim2.new(1, -4, 0, 0), UDim2.new(0, 4, 1, 0))
+local topBar    = createBorder(UDim2.new(0, 0, 0, 0), UDim2.new(1, 0, 0, 4))
+local bottomBar = createBorder(UDim2.new(0, 0, 1, -4), UDim2.new(1, 0, 0, 4))
 
-local function animateBar(bar)
-    while bar.Parent do
-        local color = Color3.fromHSV(math.random(), 1, 1)
-        TweenService:Create(bar, TweenInfo.new(2, Enum.EasingStyle.Sine), {
-            BackgroundColor3 = color
-        }):Play()
-        task.wait(2)
-    end
-end
-
-task.spawn(function() animateBar(leftBar) end)
-task.spawn(function() animateBar(rightBar) end)
+-- Rainbow Bar Animation
+task.spawn(function()
+	while true do
+		local hue = tick() % 5 / 5
+		local color = Color3.fromHSV(hue, 1, 1)
+		for _, bar in ipairs({leftBar, rightBar, topBar, bottomBar}) do
+			game:GetService("TweenService"):Create(bar, TweenInfo.new(0.5), {
+				BackgroundColor3 = color
+			}):Play()
+		end
+		task.wait(0.5)
+	end
+end)
 
 -- Title
 local title = Instance.new("TextLabel")
@@ -75,8 +79,10 @@ title.Size = UDim2.new(1, 0, 0.2, 0)
 title.BackgroundTransparency = 1
 title.Text = "⚙️ Fake Lag"
 title.Font = Enum.Font.GothamBold
-title.TextSize = 20
+title.TextSize = 22
 title.TextColor3 = Color3.new(1, 1, 1)
+title.TextStrokeTransparency = 0.8
+title.TextStrokeColor3 = Color3.new(0, 0, 0)
 title.Parent = frame
 
 -- Interval Label
@@ -94,7 +100,7 @@ intervalLabel.Parent = frame
 local intervalInput = Instance.new("TextBox")
 intervalInput.Size = UDim2.new(1, -20, 0.2, 0)
 intervalInput.Position = UDim2.new(0, 10, 0.4, 0)
-intervalInput.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+intervalInput.BackgroundColor3 = Color3.fromRGB(50, 50, 55)
 intervalInput.Text = "1.0"
 intervalInput.ClearTextOnFocus = false
 intervalInput.Font = Enum.Font.Gotham
