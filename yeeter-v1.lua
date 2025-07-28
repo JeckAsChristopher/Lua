@@ -232,7 +232,7 @@ minimizeBtn.MouseButton1Click:Connect(function()
         container.Visible = false
         minimizeBtn.Visible = false
         restoreBtn.Visible = true
-        playSound("8394620892)
+        playSound("8394620892")
 end)
 
 restoreBtn.MouseButton1Click:Connect(function()
@@ -242,7 +242,7 @@ restoreBtn.MouseButton1Click:Connect(function()
         end)
         restoreBtn.Visible = false
         minimizeBtn.Visible = true
-        playSound("8394620892)
+        playSound("8394620892")
 end)
 
 -- Custom Notification
