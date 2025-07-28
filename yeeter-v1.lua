@@ -209,10 +209,10 @@ flingAllBtn.MouseButton1Click:Connect(function()
                                         if not flingAllRunning then break end
                                         if p ~= LocalPlayer then
                                                 flingTargetPlayer(p)
-                                                task.wait(0.5)
+                                                task.wait(0.2)
                                         end
                                 end
-                                task.wait(0.5)
+                                task.wait(0.2)
                         end
                 end)
         end
