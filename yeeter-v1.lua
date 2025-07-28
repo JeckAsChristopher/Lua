@@ -1,8 +1,22 @@
 -- Services
 local Players = game:GetService("Players")
+local SoundService = game:GetService("SoundService")
 local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
 local LocalPlayer = Players.LocalPlayer
+
+-- Sound Effects
+local function playSound(soundId)
+    local sound = Instance.new("Sound")
+    sound.SoundId = "rbxassetid://" .. soundId
+    sound.Parent = SoundService
+    sound:Play()
+    sound.Ended:Connect(function()
+        sound:Destroy()
+    end)
+end
+
+playSound("7145942916")
 
 -- GUI Setup
 local gui = Instance.new("ScreenGui", LocalPlayer:WaitForChild("PlayerGui"))
@@ -143,9 +157,9 @@ local function attachFling()
         if not hrp then return end
 
         local bav = Instance.new("BodyAngularVelocity")
-        bav.AngularVelocity = Vector3.new(0, 9e9, 0)
-        bav.MaxTorque = Vector3.new(9e9, 9e9, 9e9)
-        bav.P = 100000
+        bav.AngularVelocity = Vector3.new(0, 1e20, 0)
+        bav.MaxTorque = Vector3.new(1e20, 1e20, 1e20)
+        bav.P = 1e9
         bav.Name = "FlingVelocity"
         bav.Parent = hrp
 
@@ -193,7 +207,7 @@ flingAllBtn.MouseButton1Click:Connect(function()
                                         if not flingAllRunning then break end
                                         if p ~= LocalPlayer then
                                                 flingTargetPlayer(p)
-                                                task.wait(1.5)
+                                                task.wait(0.5)
                                         end
                                 end
                                 task.wait(0.5)
@@ -217,6 +231,7 @@ minimizeBtn.MouseButton1Click:Connect(function()
         container.Visible = false
         minimizeBtn.Visible = false
         restoreBtn.Visible = true
+        playSound("8394620892)
 end)
 
 restoreBtn.MouseButton1Click:Connect(function()
@@ -226,6 +241,7 @@ restoreBtn.MouseButton1Click:Connect(function()
         end)
         restoreBtn.Visible = false
         minimizeBtn.Visible = true
+        playSound("8394620892)
 end)
 
 -- Custom Notification
