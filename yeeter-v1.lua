@@ -157,12 +157,10 @@ local function attachFling()
         local hrp = char:FindFirstChild("HumanoidRootPart")
         if not hrp then return end
 
-        hrp.Anchored = true
-
         local bav = Instance.new("BodyAngularVelocity")
-        bav.AngularVelocity = Vector3.new(0, 1e12, 0)
-        bav.MaxTorque = Vector3.new(1e12, 1e12, 1e12)
-        bav.P = 1e6
+        bav.AngularVelocity = Vector3.new(0, 1e10, 0)
+        bav.MaxTorque = Vector3.new(1e10, 1e10, 1e10)
+        bav.P = 1e5
         bav.Name = "FlingVelocity"
         bav.Parent = hrp
 
