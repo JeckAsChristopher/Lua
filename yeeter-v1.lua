@@ -1,9 +1,10 @@
 -- Services
 local Players = game:GetService("Players")
-local SoundService = game:GetService("SoundService")
 local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
 local LocalPlayer = Players.LocalPlayer
+
+local SoundService = game:GetService("SoundService")
 
 -- Sound Effects
 local function playSound(soundId)
