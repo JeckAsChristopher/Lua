@@ -158,9 +158,9 @@ local function attachFling()
         if not hrp then return end
 
         local bav = Instance.new("BodyAngularVelocity")
-        bav.AngularVelocity = Vector3.new(0, 1e20, 0)
-        bav.MaxTorque = Vector3.new(1e20, 1e20, 1e20)
-        bav.P = 1e9
+        bav.AngularVelocity = Vector3.new(0, 1e15, 0)
+        bav.MaxTorque = Vector3.new(1e15, 1e15, 1e15)
+        bav.P = 1e6
         bav.Name = "FlingVelocity"
         bav.Parent = hrp
 
@@ -200,6 +200,7 @@ local flingAllRunning = false
 flingAllBtn.MouseButton1Click:Connect(function()
         flingAllRunning = not flingAllRunning
         flingAllBtn.Text = flingAllRunning and "Fling All [ON]" or "Fling All [OFF]"
+        playSound("8394620892")
 
         if flingAllRunning then
                 task.spawn(function()
@@ -222,6 +223,7 @@ flingBtn.MouseButton1Click:Connect(function()
         local name = textBox.Text
         local target = Players:FindFirstChild(name)
         if target and target ~= LocalPlayer then
+            playSound("8394620892")
                 flingTargetPlayer(target)
         end
 end)
