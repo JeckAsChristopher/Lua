@@ -17,7 +17,7 @@ local function playSound(soundId)
     end)
 end
 
-playSound("7145942916")
+playSound("9118025346")
 
 -- GUI Setup
 local gui = Instance.new("ScreenGui", LocalPlayer:WaitForChild("PlayerGui"))
@@ -158,8 +158,8 @@ local function attachFling()
         if not hrp then return end
 
         local bav = Instance.new("BodyAngularVelocity")
-        bav.AngularVelocity = Vector3.new(0, 1e15, 0)
-        bav.MaxTorque = Vector3.new(1e15, 1e15, 1e15)
+        bav.AngularVelocity = Vector3.new(0, 1e12, 0)
+        bav.MaxTorque = Vector3.new(1e12, 1e12, 1e12)
         bav.P = 1e6
         bav.Name = "FlingVelocity"
         bav.Parent = hrp
@@ -275,7 +275,7 @@ local function customNotif()
         title.TextColor3 = Color3.fromRGB(0, 0, 0)
 
         local desc = Instance.new("TextLabel", notif)
-        desc.Text = "Enjoy!"
+        desc.Text = "Enjoy! Use fly for best experience!"
         desc.Size = UDim2.new(1, -80, 0, 20)
         desc.Position = UDim2.new(0, 80, 0, 50)
         desc.BackgroundTransparency = 1
