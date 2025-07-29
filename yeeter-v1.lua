@@ -70,7 +70,7 @@ layout.FillDirection = Enum.FillDirection.Vertical
 layout.SortOrder = Enum.SortOrder.LayoutOrder
 
 -- TextBox
-local textBox = Instance.new("TextBox", container)
+local textBox = Instance.new("", container)
 textBox.PlaceholderText = "Enter Player"
 textBox.Size = UDim2.new(1, 0, 0, 40)
 textBox.BackgroundColor3 = Color3.fromRGB(255, 255, 240)
@@ -158,9 +158,9 @@ local function attachFling()
         if not hrp then return end
 
         local bav = Instance.new("BodyAngularVelocity")
-        bav.AngularVelocity = Vector3.new(0, 1e10, 0)
-        bav.MaxTorque = Vector3.new(1e10, 1e10, 1e10)
-        bav.P = 1e5
+        bav.AngularVelocity = Vector3.new(0, 1e12, 0)
+        bav.MaxTorque = Vector3.new(1e14, 1e14, 1e14)
+        bav.P = 1e7
         bav.Name = "FlingVelocity"
         bav.Parent = hrp
 
