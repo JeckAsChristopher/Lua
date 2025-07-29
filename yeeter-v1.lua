@@ -70,7 +70,7 @@ layout.FillDirection = Enum.FillDirection.Vertical
 layout.SortOrder = Enum.SortOrder.LayoutOrder
 
 -- TextBox
-local textBox = Instance.new("TextBox", container)
+local textBox = Instance.new("TextBox")
 textBox.PlaceholderText = "Enter Player"
 textBox.Size = UDim2.new(1, 0, 0, 40)
 textBox.BackgroundColor3 = Color3.fromRGB(255, 255, 240)
@@ -79,6 +79,7 @@ textBox.TextScaled = true
 textBox.Font = Enum.Font.Gotham
 textBox.ClearTextOnFocus = false
 textBox.BorderSizePixel = 0
+textBox.Parent = container
 Instance.new("UICorner", textBox).CornerRadius = UDim.new(0, 12)
 
 -- Button Factory
