@@ -70,7 +70,7 @@ layout.FillDirection = Enum.FillDirection.Vertical
 layout.SortOrder = Enum.SortOrder.LayoutOrder
 
 -- TextBox
-local textBox = Instance.new("", container)
+local textBox = Instance.new("Enter Player", container)
 textBox.PlaceholderText = "Enter Player"
 textBox.Size = UDim2.new(1, 0, 0, 40)
 textBox.BackgroundColor3 = Color3.fromRGB(255, 255, 240)
