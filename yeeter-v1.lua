@@ -60,7 +60,7 @@ restoreBtn.Parent = frame
 
 -- Container
 local container = Instance.new("Frame", frame)
-container.Size = UDim2.new(1, -24, 1, -60)
+container.Size = UDim2.new(1, -24, 1, -24)
 container.Position = UDim2.new(0, 12, 0, 45)
 container.BackgroundTransparency = 1
 
