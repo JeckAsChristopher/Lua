@@ -117,6 +117,9 @@ end
 local flingBtn = createButton("Fling Selected Player", Color3.fromRGB(255, 160, 122))
 flingBtn.Parent = container
 
+local loopFlingBtn = createButton("Loop Fling [OFF]", Color3.fromRGB(173, 216, 230))
+loopFlingBtn.Parent = container
+
 local flingAllBtn = createButton("Fling All [OFF]", Color3.fromRGB(144, 238, 144))
 flingAllBtn.Parent = container
 
@@ -197,6 +200,8 @@ end
 
 -- Toggle Fling All
 local flingAllRunning = false
+local loopFlingRunning = false
+local loopFlingTarget = nil
 
 flingAllBtn.MouseButton1Click:Connect(function()
         flingAllRunning = not flingAllRunning
@@ -229,6 +234,35 @@ flingBtn.MouseButton1Click:Connect(function()
         end
 end)
 
+loopFlingBtn.MouseButton1Click:Connect(function()
+    loopFlingRunning = not loopFlingRunning
+    loopFlingBtn.Text = loopFlingRunning and "Loop Fling [ON]" or "Loop Fling [OFF]"
+    playSound("8394620892")
+
+    if loopFlingRunning then
+        local name = textBox.Text
+        local target = Players:FindFirstChild(name)
+        if not target or target == LocalPlayer then
+            loopFlingRunning = false
+            loopFlingBtn.Text = "Loop Fling [OFF]"
+            return
+        end
+        loopFlingTarget = target
+
+        task.spawn(function()
+            while loopFlingRunning do
+                if not loopFlingTarget or not Players:FindFirstChild(loopFlingTarget.Name) then break end
+                flingTargetPlayer(loopFlingTarget)
+                task.wait(0.4)
+            end
+            loopFlingRunning = false
+            loopFlingBtn.Text = "Loop Fling [OFF]"
+        end)
+    else
+        loopFlingTarget = nil
+    end
+end)
+
 -- Minimize / Restore
 minimizeBtn.MouseButton1Click:Connect(function()
         TweenService:Create(frame, TweenInfo.new(0.25), {Size = UDim2.new(0, 290, 0, 50)}):Play()
@@ -250,55 +284,92 @@ end)
 
 -- Custom Notification
 local function customNotif()
-        local notif = Instance.new("Frame")
-        notif.Size = UDim2.new(0, 320, 0, 100)
-        notif.Position = UDim2.new(0.5, -160, 1, -110)
-        notif.AnchorPoint = Vector2.new(0.5, 1)
-        notif.BackgroundColor3 = Color3.fromRGB(245, 245, 245)
-        notif.BorderSizePixel = 0
-        notif.Parent = gui
-        Instance.new("UICorner", notif).CornerRadius = UDim.new(0, 14)
+    local notif = Instance.new("Frame")
+    notif.Size = UDim2.new(0, 340, 0, 100)
+    notif.Position = UDim2.new(0.5, 0, 1, -120)
+    notif.AnchorPoint = Vector2.new(0.5, 1)
+    notif.BackgroundColor3 = Color3.fromRGB(250, 250, 250)
+    notif.BorderSizePixel = 0
+    notif.BackgroundTransparency = 1
+    notif.Parent = gui
 
-        local thumb = Instance.new("ImageLabel", notif)
-        thumb.Size = UDim2.new(0, 60, 0, 60)
-        thumb.Position = UDim2.new(0, 10, 0, 20)
-        thumb.BackgroundTransparency = 1
-        thumb.ScaleType = Enum.ScaleType.Crop
-        thumb.Image = Players:GetUserThumbnailAsync(Players:GetUserIdFromNameAsync("youcannotsth"), Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size100x100)
+    local bg = Instance.new("Frame", notif)
+    bg.Size = UDim2.new(1, 0, 1, 0)
+    bg.Position = UDim2.new(0, 0, 0, 0)
+    bg.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    bg.BorderSizePixel = 0
+    Instance.new("UICorner", bg).CornerRadius = UDim.new(0, 16)
 
-        local title = Instance.new("TextLabel", notif)
-        title.Text = "Made by youcannotsth!"
-        title.Size = UDim2.new(1, -80, 0, 30)
-        title.Position = UDim2.new(0, 80, 0, 15)
-        title.BackgroundTransparency = 1
-        title.Font = Enum.Font.GothamBold
-        title.TextScaled = true
-        title.TextColor3 = Color3.fromRGB(0, 0, 0)
+    local thumb = Instance.new("ImageLabel", bg)
+    thumb.Size = UDim2.new(0, 60, 0, 60)
+    thumb.Position = UDim2.new(0, 15, 0, 20)
+    thumb.BackgroundTransparency = 1
+    thumb.ImageTransparency = 1
+    thumb.ScaleType = Enum.ScaleType.Crop
+    thumb.Image = Players:GetUserThumbnailAsync(
+        Players:GetUserIdFromNameAsync("youcannotsth"),
+        Enum.ThumbnailType.HeadShot,
+        Enum.ThumbnailSize.Size100x100
+    )
+    TweenService:Create(thumb, TweenInfo.new(0.4), {ImageTransparency = 0}):Play()
 
-        local desc = Instance.new("TextLabel", notif)
-        desc.Text = "Enjoy! Use fly for best experience!"
-        desc.Size = UDim2.new(1, -80, 0, 20)
-        desc.Position = UDim2.new(0, 80, 0, 50)
-        desc.BackgroundTransparency = 1
-        desc.Font = Enum.Font.Gotham
-        desc.TextScaled = true
-        desc.TextColor3 = Color3.fromRGB(60, 60, 60)
+    local title = Instance.new("TextLabel", bg)
+    title.Text = "Made by youcannotsth!"
+    title.Size = UDim2.new(1, -100, 0, 28)
+    title.Position = UDim2.new(0, 85, 0, 20)
+    title.BackgroundTransparency = 1
+    title.TextColor3 = Color3.fromRGB(20, 20, 20)
+    title.Font = Enum.Font.GothamBold
+    title.TextScaled = true
+    title.TextTransparency = 1
+    TweenService:Create(title, TweenInfo.new(0.3), {TextTransparency = 0}):Play()
 
-        local bar = Instance.new("Frame", notif)
-        bar.Size = UDim2.new(1, 0, 0, 3)
-        bar.Position = UDim2.new(0, 0, 1, -3)
-        bar.BackgroundColor3 = Color3.fromRGB(120, 190, 255)
-        bar.BorderSizePixel = 0
+    local desc = Instance.new("TextLabel", bg)
+    desc.Text = "Enjoy! Use fly for best experience!"
+    desc.Size = UDim2.new(1, -100, 0, 20)
+    desc.Position = UDim2.new(0, 85, 0, 52)
+    desc.BackgroundTransparency = 1
+    desc.TextColor3 = Color3.fromRGB(80, 80, 80)
+    desc.Font = Enum.Font.Gotham
+    desc.TextScaled = true
+    desc.TextTransparency = 1
+    TweenService:Create(desc, TweenInfo.new(0.3), {TextTransparency = 0}):Play()
 
-        TweenService:Create(bar, TweenInfo.new(5), {Size = UDim2.new(0, 0, 0, 3)}):Play()
-        TweenService:Create(notif, TweenInfo.new(0.4), {Position = notif.Position - UDim2.new(0, 0, 0, 20)}):Play()
+    local bar = Instance.new("Frame", bg)
+    bar.Size = UDim2.new(1, 0, 0, 4)
+    bar.Position = UDim2.new(0, 0, 1, -4)
+    bar.BackgroundColor3 = Color3.fromRGB(120, 190, 255)
+    bar.BorderSizePixel = 0
+    bar.BackgroundTransparency = 0
+    Instance.new("UICorner", bar).CornerRadius = UDim.new(1, 0)
 
-        task.delay(5, function()
-                TweenService:Create(notif, TweenInfo.new(0.4), {Position = notif.Position + UDim2.new(0, 0, 0, 40)}):Play()
-                task.delay(0.4, function()
-                        notif:Destroy()
-                end)
+    -- Animate in
+    TweenService:Create(bg, TweenInfo.new(0.4), {
+        BackgroundTransparency = 0
+    }):Play()
+    TweenService:Create(notif, TweenInfo.new(0.4), {
+        Position = notif.Position - UDim2.new(0, 0, 0, 20)
+    }):Play()
+
+    -- Progress bar
+    TweenService:Create(bar, TweenInfo.new(5), {
+        Size = UDim2.new(0, 0, 0, 4)
+    }):Play()
+
+    task.delay(5, function()
+        -- Animate out
+        TweenService:Create(title, TweenInfo.new(0.3), {TextTransparency = 1}):Play()
+        TweenService:Create(desc, TweenInfo.new(0.3), {TextTransparency = 1}):Play()
+        TweenService:Create(thumb, TweenInfo.new(0.3), {ImageTransparency = 1}):Play()
+        TweenService:Create(bg, TweenInfo.new(0.3), {BackgroundTransparency = 1}):Play()
+        TweenService:Create(notif, TweenInfo.new(0.4), {
+            Position = notif.Position + UDim2.new(0, 0, 0, 40)
+        }):Play()
+
+        task.delay(0.4, function()
+            notif:Destroy()
         end)
+    end)
 end
 
 -- Show notification
