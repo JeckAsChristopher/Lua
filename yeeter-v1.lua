@@ -25,7 +25,7 @@ gui.Name = "FlingGui"
 gui.ResetOnSpawn = false
 
 local frame = Instance.new("Frame", gui)
-frame.Size = UDim2.new(0, 320, 0, 200)
+frame.Size = UDim2.new(0, 320, 0, 280)
 frame.Position = UDim2.new(0.5, -160, 0.5, -100)
 frame.BackgroundColor3 = Color3.fromRGB(255, 248, 220)
 frame.BorderSizePixel = 0
@@ -44,7 +44,7 @@ title.TextColor3 = Color3.new(0, 0, 0)
 
 -- Minimize / Restore
 local minimizeBtn = Instance.new("TextButton", frame)
-minimizeBtn.Size = UDim2.new(0, 30, 0, 30)
+minimizeBtn.Size = UDim2.new(0, 30, 0, 25)
 minimizeBtn.Position = UDim2.new(1, -35, 0, 5)
 minimizeBtn.Text = "-"
 minimizeBtn.Font = Enum.Font.GothamBold
