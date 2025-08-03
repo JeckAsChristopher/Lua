@@ -43,8 +43,6 @@ title.TextScaled = true
 title.TextColor3 = Color3.new(0, 0, 0)
 
 -- Minimize / Restore
-local originalHeight = 280
-
 local minimizeBtn = Instance.new("TextButton", frame)
 minimizeBtn.Size = UDim2.new(0, 30, 0, 25)
 minimizeBtn.Position = UDim2.new(1, -35, 0, 5)
@@ -59,6 +57,7 @@ local restoreBtn = minimizeBtn:Clone()
 restoreBtn.Text = "+"
 restoreBtn.Visible = false
 restoreBtn.Parent = frame
+
 
 -- Toggle logic
 minimizeBtn.MouseButton1Click:Connect(function()
@@ -283,7 +282,7 @@ end)
 
 -- Minimize / Restore
 minimizeBtn.MouseButton1Click:Connect(function()
-        TweenService:Create(frame, TweenInfo.new(0.25), {Size = UDim2.new(0, 290, 0, 50)}):Play()
+        TweenService:Create(frame, TweenInfo.new(0.25), {Size = UDim2.new(0, 290, 0, 35)}):Play()
         container.Visible = false
         minimizeBtn.Visible = false
         restoreBtn.Visible = true
@@ -291,7 +290,7 @@ minimizeBtn.MouseButton1Click:Connect(function()
 end)
 
 restoreBtn.MouseButton1Click:Connect(function()
-        TweenService:Create(frame, TweenInfo.new(0.25), {Size = UDim2.new(0, 320, 0, 200)}):Play()
+        TweenService:Create(frame, TweenInfo.new(0.25), {Size = UDim2.new(0, 320, 0, 280)}):Play()
         task.delay(0.25, function()
                 container.Visible = true
         end)
