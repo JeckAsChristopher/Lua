@@ -60,18 +60,21 @@ restoreBtn.Parent = frame
 
 -- Container
 local container = Instance.new("Frame", frame)
-container.Size = UDim2.new(1, -24, 1, -50)
-container.Position = UDim2.new(0, 12, 0, 40)
+container.Size = UDim2.new(1, -24, 1, -60)
+container.Position = UDim2.new(0, 12, 0, 45)
 container.BackgroundTransparency = 1
+container.ClipsDescendants = true
 
 local layout = Instance.new("UIListLayout", container)
-layout.Padding = UDim.new(0, 12)
+layout.Padding = UDim.new(0, 8)
 layout.FillDirection = Enum.FillDirection.Vertical
+layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 layout.SortOrder = Enum.SortOrder.LayoutOrder
 
 -- TextBox
 local textBox = Instance.new("TextBox")
 textBox.PlaceholderText = "Enter Player"
+textBox.Text = ""
 textBox.Size = UDim2.new(1, 0, 0, 40)
 textBox.BackgroundColor3 = Color3.fromRGB(255, 255, 240)
 textBox.TextColor3 = Color3.new(0, 0, 0)
