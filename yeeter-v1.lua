@@ -43,6 +43,8 @@ title.TextScaled = true
 title.TextColor3 = Color3.new(0, 0, 0)
 
 -- Minimize / Restore
+local originalHeight = 280
+
 local minimizeBtn = Instance.new("TextButton", frame)
 minimizeBtn.Size = UDim2.new(0, 30, 0, 25)
 minimizeBtn.Position = UDim2.new(1, -35, 0, 5)
@@ -57,6 +59,20 @@ local restoreBtn = minimizeBtn:Clone()
 restoreBtn.Text = "+"
 restoreBtn.Visible = false
 restoreBtn.Parent = frame
+
+-- Toggle logic
+minimizeBtn.MouseButton1Click:Connect(function()
+    originalHeight = frame.Size.Y.Offset
+    frame.Size = UDim2.new(0, 320, 0, 40)
+    minimizeBtn.Visible = false
+    restoreBtn.Visible = true
+end)
+
+restoreBtn.MouseButton1Click:Connect(function()
+    frame.Size = UDim2.new(0, 320, 0, originalHeight)
+    restoreBtn.Visible = false
+    minimizeBtn.Visible = true
+end)
 
 -- Container
 local container = Instance.new("Frame", frame)
