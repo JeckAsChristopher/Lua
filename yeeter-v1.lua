@@ -63,10 +63,9 @@ local container = Instance.new("Frame", frame)
 container.Size = UDim2.new(1, -24, 1, -60)
 container.Position = UDim2.new(0, 12, 0, 45)
 container.BackgroundTransparency = 1
-container.ClipsDescendants = true
 
 local layout = Instance.new("UIListLayout", container)
-layout.Padding = UDim.new(0, 8)
+layout.Padding = UDim.new(0, 14)
 layout.FillDirection = Enum.FillDirection.Vertical
 layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 layout.SortOrder = Enum.SortOrder.LayoutOrder
